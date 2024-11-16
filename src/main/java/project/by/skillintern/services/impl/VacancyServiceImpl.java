@@ -44,6 +44,11 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findAll(specification).stream().map(this::convertToVacancyDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<VacancyDTO> getAllInternships() {
+        return vacancyRepository.findAllWhereLevelIsIntern().stream().map(this::convertToVacancyDTO).collect(Collectors.toList());
+    }
+
     private VacancyDTO convertToVacancyDTO(Vacancy vacancy) {
         return modelMapper.map(vacancy, VacancyDTO.class);
     }

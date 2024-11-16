@@ -12,4 +12,5 @@ public interface VacancyService {
     List<VacancyDTO> getAllVacancies();
     List<VacancyDTO> getVacanciesByEmployer(User employer);
     List<VacancyDTO> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO);
+    List<VacancyDTO> getAllInternships();
 }
