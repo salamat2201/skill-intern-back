@@ -19,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/profile")
+@CrossOrigin(origins = "*")
 @Tag(name="Profile", description="Взаймодействие с профильем")
 @RequiredArgsConstructor
 public class ProfileController {

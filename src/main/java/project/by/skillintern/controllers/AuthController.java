@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 @Tag(name="Auth", description="Взаймодействие с пользователями")
 @RequiredArgsConstructor
 public class AuthController {

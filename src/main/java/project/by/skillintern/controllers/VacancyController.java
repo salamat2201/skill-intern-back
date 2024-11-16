@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vacancies")
+@CrossOrigin(origins = "*")
 @Tag(name="Vacancy", description="Взаймодействие с вакансиями")
 @RequiredArgsConstructor
 public class VacancyController {
