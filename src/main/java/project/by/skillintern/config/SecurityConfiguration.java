@@ -31,7 +31,8 @@ public class SecurityConfiguration {
             "/auth/**",
             "/vacancies/all",
             "/vacancies/by-filter",
-            "/profile/**"
+            "/profile/**",
+            "/internships/all"
     };
 
 

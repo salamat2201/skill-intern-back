@@ -13,7 +13,7 @@ import project.by.skillintern.services.VacancyService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/internship")
+@RequestMapping("/internships")
 @Tag(name="Vacancy", description="Взаймодействие со стажировками")
 @RequiredArgsConstructor
 public class InternshipController {
