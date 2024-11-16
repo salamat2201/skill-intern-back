@@ -32,7 +32,8 @@ public class SecurityConfiguration {
             "/vacancies/all",
             "/vacancies/by-filter",
             "/profile/**",
-            "/internships/all"
+            "/internships/all",
+            "/news/all"
     };
 
 
@@ -42,6 +43,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST_URL).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/vacancies/add", "/vacancies/my-vacancies").hasRole("EMPLOYER")
                 .anyRequest().authenticated()
         );

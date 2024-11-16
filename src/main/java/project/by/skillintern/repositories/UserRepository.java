@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.by.skillintern.entities.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,5 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("DELETE FROM User u WHERE u.isVerified = false AND u.codeSentAt < :expirationTime")
     void deleteExpiredUnverifiedUsers(@Param("expirationTime") LocalDateTime expirationTime);
+    @Query("SELECT u FROM User u WHERE u.role <> 'ROLE_ADMIN'")
+    List<User> findAllUsers();
 
 }

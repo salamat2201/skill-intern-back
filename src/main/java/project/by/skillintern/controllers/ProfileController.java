@@ -52,7 +52,7 @@ public class ProfileController {
         Map<String, String> tokens = jwtService.generateToken(profileDTO.getUsername(), currentUser.getRole().name());
 
         AuthDTO authDTO = new AuthDTO();
-        authDTO.setAccessToken(tokens.get("accessToken"));
+        authDTO.setToken(tokens.get("accessToken"));
         return ResponseEntity.ok(authDTO);
     }
 }

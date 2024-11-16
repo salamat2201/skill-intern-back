@@ -92,7 +92,7 @@ public class AuthController {
         Map<String, String> tokens = jwtService.generateToken(loginDTO.getUsername(), userOptional.get().getRole().name());
 
         AuthDTO authDTO = new AuthDTO();
-        authDTO.setAccessToken(tokens.get("accessToken"));
+        authDTO.setToken(tokens.get("accessToken"));
         return ResponseEntity.ok(authDTO);
     }
 

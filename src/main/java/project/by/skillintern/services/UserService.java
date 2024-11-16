@@ -6,6 +6,7 @@ import project.by.skillintern.dto.requests.UserDTO;
 import project.by.skillintern.entities.User;
 import project.by.skillintern.exceptions.UserAlreadyExistsException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -19,4 +20,5 @@ public interface UserService {
     Optional<User> getUserByEmail(String email);
     Optional<User> getUserByUsername(String username);
     UserDetails getCurrentUser();
+    List<UserDTO> allUsers();
 }

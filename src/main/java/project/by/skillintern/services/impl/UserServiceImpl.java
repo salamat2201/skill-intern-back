@@ -19,7 +19,9 @@ import project.by.skillintern.services.UserService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,8 +123,16 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public List<UserDTO> allUsers() {
+        return userRepository.findAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
+    }
+
     private User convertToUser(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
+    }
+    private UserDTO convertToUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 
     private String generateCode() {
