@@ -14,6 +14,7 @@ import project.by.skillintern.repositories.VacancySpecification;
 import project.by.skillintern.services.VacancyService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,19 +28,23 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.save(vacancy);
     }
     @Override
-    public List<Vacancy> getAllVacancies() {
-        return vacancyRepository.findAll();
+    public List<VacancyDTO> getAllVacancies() {
+        return vacancyRepository.findAll().stream().map(this::convertToVacancyDTO).collect(Collectors.toList());
     }
     @Override
-    public List<Vacancy> getVacanciesByEmployer(User employer) {
+    public List<VacancyDTO> getVacanciesByEmployer(User employer) {
         return vacancyRepository.findAll().stream()
                 .filter(job -> job.getEmployer().equals(employer))
-                .toList();
+                .toList().stream().map(this::convertToVacancyDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<Vacancy> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO) {
+    public List<VacancyDTO> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO) {
         Specification<Vacancy> specification = VacancySpecification.filterVacancies(filterVacancyDTO);
-        return vacancyRepository.findAll(specification);
+        return vacancyRepository.findAll(specification).stream().map(this::convertToVacancyDTO).collect(Collectors.toList());
+    }
+
+    private VacancyDTO convertToVacancyDTO(Vacancy vacancy) {
+        return modelMapper.map(vacancy, VacancyDTO.class);
     }
 }

@@ -4,18 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.by.skillintern.config.CustomAuthenticationProvider;
@@ -24,10 +19,11 @@ import project.by.skillintern.dto.responses.AuthDTO;
 import project.by.skillintern.entities.User;
 import project.by.skillintern.exceptions.UserAlreadyExistsException;
 import project.by.skillintern.jwt.JwtService;
+import project.by.skillintern.services.TokenBlacklistService;
+import project.by.skillintern.services.UserService;
 import project.by.skillintern.services.impl.EmailServiceImpl;
-import project.by.skillintern.services.impl.UserServiceImpl;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,10 +33,10 @@ import java.util.stream.Collectors;
 @Tag(name="Auth", description="Взаймодействие с пользователями")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final JwtService jwtService;
     private final CustomAuthenticationProvider authenticationProvider;
-    private final ModelMapper modelMapper;
+    private final TokenBlacklistService tokenBlacklistService;
     private final EmailServiceImpl emailService;
 
     @PostMapping( "/signup")
@@ -92,45 +88,28 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("This user is not verified yet");
         }
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(userOptional.get().getUsername1(), loginDTO.getPassword()));
-        Map<String, String> tokens = jwtService.generateTokens(loginDTO.getUsername(), userOptional.get().getRole().name());
+        Map<String, String> tokens = jwtService.generateToken(loginDTO.getUsername(), userOptional.get().getRole().name());
 
-        AuthDTO authDTO = modelMapper.map(userOptional.get(), AuthDTO.class);
+        AuthDTO authDTO = new AuthDTO();
         authDTO.setAccessToken(tokens.get("accessToken"));
-        authDTO.setRefreshToken(tokens.get("refreshToken"));
         return ResponseEntity.ok(authDTO);
     }
-    @PostMapping("/refresh-token")
-    @Operation(summary = "Refresh Access Token", description = "Refreshes the access token using a valid refresh token.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Access token refreshed successfully"),
-                    @ApiResponse(responseCode = "403", description = "Invalid or expired refresh token"),
-                    @ApiResponse(responseCode = "401", description = "Invalid refresh token")
-            },
-            security = @SecurityRequirement(name = "bearerToken"))
 
-    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            String refreshToken = headerAuth.substring(7);
-            try {
-                if (jwtService.validateRefreshToken(refreshToken)) { // Проверка валидности рефреш токена
-                    String userName = jwtService.extractUsername(refreshToken);
-                    // Проверка, что пользователь существует и активен
-                    UserDetails userDetails = userService.loadUserByUsername(userName);
-                    String role = userService.getUserByUsername(userName).get().getRole().name();
-                    if (userDetails != null && !jwtService.isTokenExpired(refreshToken)) {
-                        String newAccessToken = jwtService.generateTokens(userName, role).get("accessToken");
-                        Map<String, String> tokens = new HashMap<>();
-                        tokens.put("accessToken", newAccessToken);
-                        tokens.put("refreshToken", refreshToken); // Отправляем тот же рефреш токен обратно
-                        return ResponseEntity.ok(tokens);
-                    }
-                }
-            } catch (Exception e) {
-                throw new BadCredentialsException("Invalid refresh token");
-            }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+
+            // Извлекаем дату истечения токена
+            Date expirationTime = jwtService.extractExpiration(token);
+
+            // Добавляем токен в черный список
+            tokenBlacklistService.addTokenToBlacklist(token, expirationTime);
+
+            return ResponseEntity.ok("Logged out successfully");
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid or expired refresh token");
+        return ResponseEntity.badRequest().body("Invalid token");
     }
 
     @PostMapping("/forgot-password")

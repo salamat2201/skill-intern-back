@@ -24,8 +24,7 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final long ACCESS_TOKEN_VALIDITY = 1_800_000; // 30 минут
-    private final long REFRESH_TOKEN_VALIDITY = 604_800_000; // 7 дней
+    private final long ACCESS_TOKEN_VALIDITY = 86_400_000; // 1 день
 
     /**
      * Извлекает имя пользователя из токена.
@@ -52,14 +51,12 @@ public class JwtService {
     /**
      * Генерация access и refresh токенов.
      */
-    public Map<String, String> generateTokens(String userName, String role) {
+    public Map<String, String> generateToken(String userName, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         String accessToken = createToken(claims, userName, ACCESS_TOKEN_VALIDITY, "access");
-        String refreshToken = createToken(claims, userName, REFRESH_TOKEN_VALIDITY, "refresh");
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
-        tokens.put("refreshToken", refreshToken);
         return tokens;
     }
 
@@ -77,14 +74,6 @@ public class JwtService {
 
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token)
                 && "access".equals(tokenType) && hasRequiredRole;
-    }
-
-    /**
-     * Проверка валидности refresh токена.
-     */
-    public Boolean validateRefreshToken(String token) {
-        String tokenType = extractClaim(token, claims -> claims.get("typ", String.class));
-        return !isTokenExpired(token) && "refresh".equals(tokenType);
     }
 
     /**
