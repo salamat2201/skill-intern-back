@@ -10,9 +10,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import project.by.skillintern.exceptions.IncorrectJSONException;
 import project.by.skillintern.exceptions.UserAlreadyExistsException;
+import project.by.skillintern.exceptions.VacancyNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,10 +55,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-        @ExceptionHandler
-        public ResponseEntity<String> handleUserNotFound(UsernameNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @ExceptionHandler
+    public ResponseEntity<String> handleUserNotFound(UsernameNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
     @ExceptionHandler
     public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException e){
@@ -63,11 +66,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<String> handleVacancyNotFoundException(VacancyNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler
     public ResponseEntity<String> handleIncorrectJsonException(IncorrectJSONException e){
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
     }
 
-    @ExceptionHandler ResponseEntity<String> handleInvalidCredentialsException(BadCredentialsException e){
+    @ExceptionHandler
+    public ResponseEntity<String> handleInvalidCredentialsException(BadCredentialsException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

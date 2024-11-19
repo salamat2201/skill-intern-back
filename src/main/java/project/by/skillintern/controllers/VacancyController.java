@@ -34,24 +34,34 @@ public class VacancyController {
     @Operation(summary = "Add a new vacancy. Only Employers.")
     @ApiResponse(responseCode = "202", description = "Vacancy created successfully!")
     private ResponseEntity<?> addNewVacancy(@RequestBody @Valid VacancyDTO vacancyDTO, BindingResult bindingResult) {
-        User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
         if (bindingResult.hasErrors()) {
             String errorMessages = bindingResult.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
                     .collect(Collectors.joining("; "));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
         }
-        Vacancy vacancy = convertToVacancy(vacancyDTO);
-        vacancy.setEmployer(currentUser);
-        vacancyService.createVacancy(vacancy);
+        vacancyService.createVacancy(vacancyDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Vacancy created successfully!");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     @Operation(summary = "Get vacancy detail by id. All Users(Токен керек емес)")
     private ResponseEntity<VacancyDTO> vacancyDetail(@PathVariable Long id) {
         return ResponseEntity.ok(vacancyService.getVacancyDetail(id));
+    }
+
+    @PutMapping("/edit/{id}")
+    @Operation(summary = "Update vacancy detail. Employers")
+    private ResponseEntity<String> editVacancy(@PathVariable Long id, @RequestBody VacancyDTO vacancyDTO) {
+        vacancyService.updateVacancy(id, vacancyDTO);
+        return ResponseEntity.ok("Vacancy updated successfully!");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete vacancy. Employers")
+    private ResponseEntity<String> deleteVacancy(@PathVariable Long id) {
+        vacancyService.deleteVacancy(id);
+        return ResponseEntity.ok("Vacancy deleted successfully!");
     }
 
     @GetMapping("/all")
@@ -70,11 +80,6 @@ public class VacancyController {
     private ResponseEntity<List<VacancyResponseDTO>> getMyVacancies() {
         User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         return ResponseEntity.ok(vacancyService.getVacanciesByEmployer(currentUser));
-    }
-
-    private Vacancy convertToVacancy(VacancyDTO vacancyDTO) {
-        return modelMapper.map(vacancyDTO, Vacancy.class);
     }
 }

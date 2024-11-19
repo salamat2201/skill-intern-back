@@ -11,8 +11,10 @@ import project.by.skillintern.dto.requests.VacancyDTO;
 import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.User;
 import project.by.skillintern.entities.Vacancy;
+import project.by.skillintern.exceptions.VacancyNotFoundException;
 import project.by.skillintern.repositories.VacancyRepository;
 import project.by.skillintern.repositories.VacancySpecification;
+import project.by.skillintern.services.UserService;
 import project.by.skillintern.services.VacancyService;
 
 import java.util.List;
@@ -24,10 +26,15 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class VacancyServiceImpl implements VacancyService {
     private final VacancyRepository vacancyRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
     @Override
     @Transactional
-    public void createVacancy(Vacancy vacancy) {
+    public void createVacancy(VacancyDTO vacancyDTO) {
+        User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Vacancy vacancy = convertToVacancy(vacancyDTO);
+        vacancy.setEmployer(currentUser);
         vacancyRepository.save(vacancy);
     }
 
@@ -36,6 +43,7 @@ public class VacancyServiceImpl implements VacancyService {
     public List<VacancyResponseDTO> getAllVacancies() {
         return vacancyRepository.findAll().stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
     }
+
     @Transactional
     @Override
     public List<VacancyResponseDTO> getVacanciesByEmployer(User employer) {
@@ -43,7 +51,6 @@ public class VacancyServiceImpl implements VacancyService {
                 .filter(job -> job.getEmployer().equals(employer))
                 .toList().stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
     }
-
     @Transactional
     @Override
     public List<VacancyResponseDTO> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO) {
@@ -69,6 +76,22 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyDTO;
     }
 
+    @Override
+    @Transactional
+    public void updateVacancy(Long id, VacancyDTO vacancyDTO) {
+        Vacancy vacancy = vacancyRepository.findById(id)
+                .orElseThrow(() -> new VacancyNotFoundException("Vacancy with ID " + id + " not found"));
+
+        modelMapper.map(vacancyDTO, vacancy);
+        vacancyRepository.save(vacancy);
+    }
+
+    @Override
+    @Transactional
+    public void deleteVacancy(Long id) {
+        vacancyRepository.deleteById(id);
+    }
+
     private VacancyResponseDTO convertToVacancyResponseDTO(Vacancy vacancy) {
         VacancyResponseDTO vacancyResponseDTO = new VacancyResponseDTO();
         vacancyResponseDTO.setCompanyName(vacancy.getEmployer().getCompanyName());
@@ -80,7 +103,11 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyResponseDTO.setId(vacancy.getId());
         return vacancyResponseDTO;
     }
+
     private VacancyDTO convertToVacancyDTO(Vacancy vacancy) {
         return modelMapper.map(vacancy, VacancyDTO.class);
+    }
+    private Vacancy convertToVacancy(VacancyDTO vacancyDTO) {
+        return modelMapper.map(vacancyDTO, Vacancy.class);
     }
 }

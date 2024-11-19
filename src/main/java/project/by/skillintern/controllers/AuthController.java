@@ -97,6 +97,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "User logout.")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
