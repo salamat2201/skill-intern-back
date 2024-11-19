@@ -44,6 +44,9 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Column(name = "company_name")
+    private String companyName;
+
     @Column(name = "code_sent_at")
     private LocalDateTime codeSentAt;
 

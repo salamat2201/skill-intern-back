@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.by.skillintern.dto.requests.FilterVacancyDTO;
 import project.by.skillintern.dto.requests.VacancyDTO;
+import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.User;
 import project.by.skillintern.entities.Vacancy;
 import project.by.skillintern.services.UserService;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/vacancies")
+@RequestMapping("/vacancy")
 @CrossOrigin(origins = "*")
 @Tag(name="Vacancy", description="Взаймодействие с вакансиями")
 @RequiredArgsConstructor
@@ -46,20 +47,26 @@ public class VacancyController {
         vacancyService.createVacancy(vacancy);
         return ResponseEntity.status(HttpStatus.CREATED).body("Vacancy created successfully!");
     }
+
+    @GetMapping("/{id}")
+    private ResponseEntity<VacancyDTO> vacancyDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(vacancyService.getVacancyDetail(id));
+    }
+
     @GetMapping("/all")
     @Operation(summary = "Get all vacancies. All Users(Токен керек емес)")
     @ApiResponse(responseCode = "200")
-    private ResponseEntity<List<VacancyDTO>> all() {
+    private ResponseEntity<List<VacancyResponseDTO>> all() {
         return ResponseEntity.ok(vacancyService.getAllVacancies());
     }
     @GetMapping("/by-filter")
-    @Operation(summary = "Get vacancies by filter. ")
-    private ResponseEntity<List<VacancyDTO>> vacanciesByFilter(@RequestBody FilterVacancyDTO filterVacancyDTO) {
+    @Operation(summary = "Get vacancies by filter. All Users(Токен керек емес)")
+    private ResponseEntity<List<VacancyResponseDTO>> vacanciesByFilter(@RequestBody FilterVacancyDTO filterVacancyDTO) {
         return ResponseEntity.ok(vacancyService.getVacanciesByFilter(filterVacancyDTO));
     }
     @GetMapping("/my-vacancies")
     @Operation(summary = "Get my vacancies. All Users(Токен керек емес)")
-    public ResponseEntity<List<VacancyDTO>> getMyVacancies() {
+    private ResponseEntity<List<VacancyResponseDTO>> getMyVacancies() {
         User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

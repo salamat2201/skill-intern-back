@@ -19,4 +19,5 @@ public class VacancyDTO {
     private String whatsappNumber;
     private String email;
     private Boolean remoteWork;
+    private String companyName;
 }

@@ -30,14 +30,13 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/auth/**",
-            "/vacancies/all",
-            "/vacancies/by-filter",
+            "/vacancy/all",
+            "/vacancy/by-filter",
+            "/vacancy/*",
             "/profile/**",
-            "/internships/all",
+            "/internship/all",
             "/news/all"
     };
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -46,7 +45,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST_URL).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/vacancies/add", "/vacancies/my-vacancies").hasRole("EMPLOYER")
+                .requestMatchers("/vacancy/add", "/vacancy/my-vacancies").hasRole("EMPLOYER")
                 .anyRequest().authenticated()
         );
 

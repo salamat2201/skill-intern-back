@@ -9,20 +9,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.by.skillintern.dto.requests.VacancyDTO;
+import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.services.VacancyService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/internships")
+@RequestMapping("/internship")
 @CrossOrigin(origins = "*")
-@Tag(name="Vacancy", description="Взаймодействие со стажировками")
+@Tag(name="Internship", description="Взаймодействие со стажировками")
 @RequiredArgsConstructor
 public class InternshipController {
     private final VacancyService vacancyService;
     @GetMapping("/all")
     @Operation(summary = "Get all internships. All Users(Token керек емес)")
-    private ResponseEntity<List<VacancyDTO>> allInternships() {
+    private ResponseEntity<List<VacancyResponseDTO>> allInternships() {
         return ResponseEntity.ok(vacancyService.getAllInternships());
     }
 }

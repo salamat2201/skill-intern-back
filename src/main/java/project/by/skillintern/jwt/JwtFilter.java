@@ -35,19 +35,27 @@ public class JwtFilter extends OncePerRequestFilter {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/auth/**",
-            "/api/vacancies/all",
-            "/api/vacancies/by-filter",
-            "/api/internships/all",
+            "/api/vacancy/all",
+            "/api/vacancy/by-filter",
+            "/api/vacancy/*",
+            "/api/internship/all",
             "/api/news/all"
     );
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String requestUri = request.getRequestURI();
-        if (PUBLIC_URLS.stream().anyMatch(requestUri::startsWith)) {
+
+        boolean isPublicUrl = PUBLIC_URLS.stream()
+                .anyMatch(publicUrl -> publicUrl.equals(requestUri) || matchWithWildcard(publicUrl, requestUri));
+
+        if (isPublicUrl) {
             filterChain.doFilter(request, response);
             return;
         }
+
         String authHeader = request.getHeader("Authorization");
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
@@ -56,32 +64,43 @@ public class JwtFilter extends OncePerRequestFilter {
                     response.getWriter().write("Token is invalid (logged out)");
                     return;
                 }
-                // Извлекаем имя пользователя, используя токен
                 String username = jwtService.extractUsername(token);
+
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Загружаем userDetails для дальнейшей валидации
                     UserDetails userDetails = userService.loadUserByUsername(username);
-                    // Проверяем валидность токена
                     if (jwtService.validateToken(token, userDetails)) {
                         String tokenRole = jwtService.extractClaim(token, claims -> claims.get("role", String.class));
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                Collections.singleton(new SimpleGrantedAuthority(tokenRole)) // Используем роль из токена
+                                Collections.singleton(new SimpleGrantedAuthority(tokenRole))
                         );
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
-
                 }
             } catch (Exception e) {
-                // Логирование ошибки или дальнейшие действия, например, установка статуса ответа
-                // Например, если токен истек или неверен
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
+
         filterChain.doFilter(request, response);
     }
 
+    private boolean matchWithWildcard(String pattern, String requestUri) {
+        if (pattern.endsWith("/**")) {
+            String basePattern = pattern.substring(0, pattern.length() - 3);
+            return requestUri.startsWith(basePattern);
+        }
+        if (pattern.endsWith("/*")) {
+            String basePattern = pattern.substring(0, pattern.length() - 2);
+            String remainingPath = requestUri.substring(basePattern.length());
+            return requestUri.startsWith(basePattern) && remainingPath.startsWith("/") && !remainingPath.substring(1).contains("/");
+        }
+        return pattern.equals(requestUri);
+    }
 }
