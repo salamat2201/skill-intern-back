@@ -21,7 +21,7 @@ import java.util.List;
 public class NewsController {
     private final NewsService newsService;
     @GetMapping("/all")
-    @Operation(summary = "Get all news")
+    @Operation(summary = "Get all news. All Users(Token керек емес)")
     private ResponseEntity<List<NewsResponseDTO>> allNews() {
         return ResponseEntity.ok(newsService.allNews());
     }

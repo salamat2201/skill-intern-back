@@ -22,12 +22,12 @@ public class AdminController {
     private final UserService userService;
     private final NewsService newsService;
     @GetMapping("/allUsers")
-    @Operation(summary = "Get all users")
+    @Operation(summary = "Get all users. Only ADMIN")
     private ResponseEntity<List<UserDTO>> allUsers() {
         return ResponseEntity.ok(userService.allUsers());
     }
     @PostMapping("/addNews")
-    @Operation(summary = "Add news")
+    @Operation(summary = "Add news. Only ADMIN")
     private ResponseEntity<?> addNews(NewsDTO newsDTO) {
         try {
             newsService.addNews(newsDTO);

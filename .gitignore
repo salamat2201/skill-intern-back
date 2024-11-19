@@ -30,6 +30,9 @@ out/
 ### Ignore environment files ###
 .env
 
+### Ignore yml files ###
+application.yml
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

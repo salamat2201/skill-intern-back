@@ -28,7 +28,7 @@ public class ProfileController {
     private final JwtService jwtService;
 
     @GetMapping("/get")
-    @Operation(summary = "Get user profile")
+    @Operation(summary = "Get user profile. Authenticated Users(Токен керек)")
     @ApiResponse(responseCode = "200")
     private ResponseEntity<ProfileDTO> getProfile() {
         User currentUser = profileService.getProfile(userService.getCurrentUser().getUsername())
@@ -39,7 +39,7 @@ public class ProfileController {
     }
 
     @PutMapping("/edit")
-    @Operation(summary = "Edit user profile")
+    @Operation(summary = "Edit user profile. Authenticated Users(Токен керек)")
     private ResponseEntity<?> editProfile(@RequestBody ProfileDTO profileDTO) throws UserAlreadyExistsException {
         User currentUser = profileService.getProfile(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

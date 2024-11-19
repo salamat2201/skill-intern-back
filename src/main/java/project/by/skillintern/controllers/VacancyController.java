@@ -30,7 +30,7 @@ public class VacancyController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new vacancy")
+    @Operation(summary = "Add a new vacancy. Only Employers.")
     @ApiResponse(responseCode = "202", description = "Vacancy created successfully!")
     private ResponseEntity<?> addNewVacancy(@RequestBody @Valid VacancyDTO vacancyDTO, BindingResult bindingResult) {
         User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
@@ -47,18 +47,18 @@ public class VacancyController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Vacancy created successfully!");
     }
     @GetMapping("/all")
-    @Operation(summary = "Get all vacancies")
+    @Operation(summary = "Get all vacancies. All Users(Токен керек емес)")
     @ApiResponse(responseCode = "200")
     private ResponseEntity<List<VacancyDTO>> all() {
         return ResponseEntity.ok(vacancyService.getAllVacancies());
     }
     @GetMapping("/by-filter")
-    @Operation(summary = "Get vacancies by filter")
+    @Operation(summary = "Get vacancies by filter. ")
     private ResponseEntity<List<VacancyDTO>> vacanciesByFilter(@RequestBody FilterVacancyDTO filterVacancyDTO) {
         return ResponseEntity.ok(vacancyService.getVacanciesByFilter(filterVacancyDTO));
     }
     @GetMapping("/my-vacancies")
-    @Operation(summary = "Get my vacancies")
+    @Operation(summary = "Get my vacancies. All Users(Токен керек емес)")
     public ResponseEntity<List<VacancyDTO>> getMyVacancies() {
         User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));

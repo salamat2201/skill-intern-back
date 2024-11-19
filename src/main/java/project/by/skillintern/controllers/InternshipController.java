@@ -21,7 +21,7 @@ import java.util.List;
 public class InternshipController {
     private final VacancyService vacancyService;
     @GetMapping("/all")
-    @Operation(summary = "Get all internships")
+    @Operation(summary = "Get all internships. All Users(Token керек емес)")
     private ResponseEntity<List<VacancyDTO>> allInternships() {
         return ResponseEntity.ok(vacancyService.getAllInternships());
     }
