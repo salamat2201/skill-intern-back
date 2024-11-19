@@ -16,7 +16,6 @@ import project.by.skillintern.services.TokenBlacklistService;
 import project.by.skillintern.services.UserService;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

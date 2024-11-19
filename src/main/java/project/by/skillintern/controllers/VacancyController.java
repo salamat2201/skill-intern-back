@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,7 +13,6 @@ import project.by.skillintern.dto.requests.FilterVacancyDTO;
 import project.by.skillintern.dto.requests.VacancyDTO;
 import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.User;
-import project.by.skillintern.entities.Vacancy;
 import project.by.skillintern.services.UserService;
 import project.by.skillintern.services.VacancyService;
 import java.util.List;
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 public class VacancyController {
     private final VacancyService vacancyService;
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @PostMapping("/add")
     @Operation(summary = "Add a new vacancy. Only Employers.")

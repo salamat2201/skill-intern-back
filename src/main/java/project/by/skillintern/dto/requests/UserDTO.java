@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
-    @NotNull(message = "")
+    @NotNull(message = "Username не должен быть пустым!")
     private String username;
     @Email(message = "Неверный формат email")
-    @NotNull(message = "")
+    @NotNull(message = "Email не должен быть пустым!")
     private String email;
     @NotNull(message = "")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&_#])(?=.*[a-z])[A-Za-z\\d@$!%*?&_#]{8,}$",
