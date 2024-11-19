@@ -49,6 +49,7 @@ public class VacancyController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get vacancy detail by id. All Users(Токен керек емес)")
     private ResponseEntity<VacancyDTO> vacancyDetail(@PathVariable Long id) {
         return ResponseEntity.ok(vacancyService.getVacancyDetail(id));
     }

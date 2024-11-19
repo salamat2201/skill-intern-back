@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.by.skillintern.dto.requests.VacancyDTO;
 import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.services.VacancyService;
@@ -25,5 +22,10 @@ public class InternshipController {
     @Operation(summary = "Get all internships. All Users(Token керек емес)")
     private ResponseEntity<List<VacancyResponseDTO>> allInternships() {
         return ResponseEntity.ok(vacancyService.getAllInternships());
+    }
+    @GetMapping("/{id}")
+    @Operation(summary = "Get internship detail by id. All Users(Токен керек емес)")
+    private ResponseEntity<VacancyDTO> internshipDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(vacancyService.getVacancyDetail(id));
     }
 }
