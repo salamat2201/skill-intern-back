@@ -46,4 +46,21 @@ public class ResponseController {
     private ResponseEntity<List<MyResponsesDTO>> myResponses() {
         return ResponseEntity.ok(responseService.getResponsesForUser());
     }
+    @GetMapping("/my/accepted")
+    @Operation(summary = "Get my accepted responses. Only Users")
+    private ResponseEntity<List<MyResponsesDTO>> getAcceptedResponses() {
+        return ResponseEntity.ok(responseService.getResponses(ResponseStatus.ACCEPTED));
+    }
+
+    @GetMapping("/my/rejected")
+    @Operation(summary = "Get my rejected responses. Only Users")
+    private ResponseEntity<List<MyResponsesDTO>> getRejectedResponses() {
+        return ResponseEntity.ok(responseService.getResponses(ResponseStatus.REJECTED));
+    }
+
+    @GetMapping("/my/pending")
+    @Operation(summary = "Get my pending responses. Only Users")
+    private ResponseEntity<List<MyResponsesDTO>> getPendingResponses() {
+        return ResponseEntity.ok(responseService.getResponses(ResponseStatus.PENDING));
+    }
 }

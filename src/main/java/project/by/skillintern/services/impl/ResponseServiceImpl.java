@@ -104,4 +104,20 @@ public class ResponseServiceImpl implements ResponseService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MyResponsesDTO> getResponses(ResponseStatus status) {
+        User user = userService.getUserByUsername(userService.getCurrentUser().getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return responseRepository.findByUserAndStatus(user, status)
+                .stream()
+                .map(response -> {
+                    Vacancy vacancy = response.getVacancy();
+                    return new MyResponsesDTO(vacancy.getId(), vacancy.getTitle(), vacancy.getLocation()
+                            , vacancy.getSalaryStart(), vacancy.getSalaryEnd(), vacancy.getExperience()
+                            , vacancy.getEmployer().getCompanyName(), response.getStatus());
+                })
+                .collect(Collectors.toList());
+    }
 }

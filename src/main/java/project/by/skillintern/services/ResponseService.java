@@ -11,4 +11,5 @@ public interface ResponseService {
     List<ResponseDTO> getResponsesForEmployer(String employerUsername);
     void updateResponseStatus(Long responseId, ResponseStatus status);
     List<MyResponsesDTO> getResponsesForUser();
+    List<MyResponsesDTO> getResponses(ResponseStatus status);
 }
