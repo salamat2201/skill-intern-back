@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.by.skillintern.dto.responses.MyResponsesDTO;
 import project.by.skillintern.dto.responses.ResponseDTO;
-import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.Response;
 import project.by.skillintern.entities.ResponseStatus;
 import project.by.skillintern.entities.User;

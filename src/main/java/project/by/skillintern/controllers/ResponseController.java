@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.by.skillintern.dto.responses.MyResponsesDTO;
 import project.by.skillintern.dto.responses.ResponseDTO;
-import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.ResponseStatus;
 import project.by.skillintern.services.ResponseService;
 import project.by.skillintern.services.UserService;
