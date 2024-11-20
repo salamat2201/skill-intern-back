@@ -45,7 +45,9 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST_URL).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/vacancy/add", "/vacancy/my-vacancies", "/vacancy/edit/*", "/vacancy/delete/*").hasRole("EMPLOYER")
+                .requestMatchers("/responses/create", "/responses/my").hasRole("USER")
+                .requestMatchers("/vacancy/add", "/vacancy/my-vacancies", "/vacancy/edit/*"
+                        , "/vacancy/delete/*", "/responses/forMyVacancy", "responses/status/*").hasRole("EMPLOYER")
                 .anyRequest().permitAll()
         );
 

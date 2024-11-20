@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -49,6 +51,9 @@ public class User implements UserDetails {
 
     @Column(name = "code_sent_at")
     private LocalDateTime codeSentAt;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Response> responses = new ArrayList<>();
+
 
     public String getUsername1() {
         return this.username;

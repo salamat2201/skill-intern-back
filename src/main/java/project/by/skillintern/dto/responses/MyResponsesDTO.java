@@ -1,19 +1,18 @@
 package project.by.skillintern.dto.responses;
 
 import lombok.Data;
+import project.by.skillintern.entities.ResponseStatus;
 
 @Data
-public class VacancyResponseDTO {
-    private Long id;
+public class MyResponsesDTO {private Long id;
     private String title;
     private String location;
     private Long salaryStart;
     private Long salaryEnd;
     private Integer experience;
     private String companyName;
-
-    public VacancyResponseDTO(){}
-    public VacancyResponseDTO(Long id, String title, String location, Long salaryStart, Long salaryEnd, Integer experience, String companyName) {
+    private ResponseStatus responseStatus;
+    public MyResponsesDTO(Long id, String title, String location, Long salaryStart, Long salaryEnd, Integer experience, String companyName, ResponseStatus responseStatus) {
         this.id = id;
         this.title = title;
         this.location = location;
@@ -21,5 +20,6 @@ public class VacancyResponseDTO {
         this.salaryEnd = salaryEnd;
         this.experience = experience;
         this.companyName = companyName;
+        this.responseStatus = responseStatus;
     }
 }

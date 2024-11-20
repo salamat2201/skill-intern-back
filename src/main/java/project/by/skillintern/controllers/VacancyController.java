@@ -73,7 +73,7 @@ public class VacancyController {
         return ResponseEntity.ok(vacancyService.getVacanciesByFilter(filterVacancyDTO));
     }
     @GetMapping("/my-vacancies")
-    @Operation(summary = "Get my vacancies. All Users(Токен керек емес)")
+    @Operation(summary = "Get my vacancies.")
     private ResponseEntity<List<VacancyResponseDTO>> getMyVacancies() {
         User currentUser = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));

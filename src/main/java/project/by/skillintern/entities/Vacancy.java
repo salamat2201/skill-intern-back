@@ -3,6 +3,8 @@ package project.by.skillintern.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "vacancies")
@@ -63,4 +65,8 @@ public class Vacancy {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id", nullable = false)
     private User employer;
+
+    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Response> responses = new ArrayList<>();
+
 }
