@@ -11,13 +11,21 @@ CRUD операции для объявлений о вакансиях.
 Использование Redis для списка токенов в черном списке.
 Уведомления по email при верификации аккаунта и откликах.
 
-##Технологии
+## Технологии
 Swagger
+
 Gradle
+
 Spring Boot
+
 PostgreSQL
+
 Spring Security
+
 AWS S3
+
 Redis
+
 Java Mail Sender
+
 Docker
