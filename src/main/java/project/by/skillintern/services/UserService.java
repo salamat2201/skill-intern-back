@@ -21,4 +21,5 @@ public interface UserService {
     Optional<User> getUserByUsername(String username);
     UserDetails getCurrentUser();
     List<UserDTO> allUsers();
+    void addCompany(String employerName, String company);
 }

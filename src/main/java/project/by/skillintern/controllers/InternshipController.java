@@ -20,12 +20,12 @@ public class InternshipController {
     private final VacancyService vacancyService;
     @GetMapping("/all")
     @Operation(summary = "Get all internships. All Users(Token керек емес)")
-    private ResponseEntity<List<VacancyResponseDTO>> allInternships() {
+    public ResponseEntity<List<VacancyResponseDTO>> allInternships() {
         return ResponseEntity.ok(vacancyService.getAllInternships());
     }
     @GetMapping("/{id}")
     @Operation(summary = "Get internship detail by id. All Users(Токен керек емес)")
-    private ResponseEntity<VacancyDTO> internshipDetail(@PathVariable Long id) {
+    public ResponseEntity<VacancyDTO> internshipDetail(@PathVariable Long id) {
         return ResponseEntity.ok(vacancyService.getVacancyDetail(id));
     }
 }

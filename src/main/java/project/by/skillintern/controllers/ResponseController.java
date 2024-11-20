@@ -22,20 +22,20 @@ public class ResponseController {
     private final UserService userService;
     @PostMapping("/create")
     @Operation(summary = "Create response for vacancy. Only Users")
-    private ResponseEntity<String> createResponse(@RequestParam Long vacancyId){
+    public ResponseEntity<String> createResponse(@RequestParam Long vacancyId){
         responseService.createResponse(vacancyId);
         return ResponseEntity.status(HttpStatus.CREATED).body("Response created successfully");
     }
     @GetMapping("/forMyVacancy")
     @Operation(summary = "Get all responses for Employer Vacancy. Only Employers")
-    private ResponseEntity<List<ResponseDTO>> getResponsesForEmployer() {
+    public ResponseEntity<List<ResponseDTO>> getResponsesForEmployer() {
         String employerUsername = userService.getCurrentUser().getUsername();
         List<ResponseDTO> responses = responseService.getResponsesForEmployer(employerUsername);
         return ResponseEntity.ok(responses);
     }
     @PatchMapping("/status/{responseId}")
     @Operation(summary = "Get all vacancies. All Users(Токен керек емес)")
-    private ResponseEntity<String> updateResponseStatus(
+    public ResponseEntity<String> updateResponseStatus(
             @PathVariable Long responseId,
             @RequestParam ResponseStatus status) {
         responseService.updateResponseStatus(responseId, status);
@@ -43,24 +43,24 @@ public class ResponseController {
     }
     @GetMapping("/my")
     @Operation(summary = "Get my responses. Only Users")
-    private ResponseEntity<List<MyResponsesDTO>> myResponses() {
+    public ResponseEntity<List<MyResponsesDTO>> myResponses() {
         return ResponseEntity.ok(responseService.getResponsesForUser());
     }
     @GetMapping("/my/accepted")
     @Operation(summary = "Get my accepted responses. Only Users")
-    private ResponseEntity<List<MyResponsesDTO>> getAcceptedResponses() {
+    public ResponseEntity<List<MyResponsesDTO>> getAcceptedResponses() {
         return ResponseEntity.ok(responseService.getResponses(ResponseStatus.ACCEPTED));
     }
 
     @GetMapping("/my/rejected")
     @Operation(summary = "Get my rejected responses. Only Users")
-    private ResponseEntity<List<MyResponsesDTO>> getRejectedResponses() {
+    public ResponseEntity<List<MyResponsesDTO>> getRejectedResponses() {
         return ResponseEntity.ok(responseService.getResponses(ResponseStatus.REJECTED));
     }
 
     @GetMapping("/my/pending")
     @Operation(summary = "Get my pending responses. Only Users")
-    private ResponseEntity<List<MyResponsesDTO>> getPendingResponses() {
+    public ResponseEntity<List<MyResponsesDTO>> getPendingResponses() {
         return ResponseEntity.ok(responseService.getResponses(ResponseStatus.PENDING));
     }
 }

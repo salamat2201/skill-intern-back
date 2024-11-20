@@ -128,6 +128,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllUsers().stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public void addCompany(String employerName, String company) {
+        User employer = userRepository.findByUsername(employerName)
+                .orElseThrow(() -> new UsernameNotFoundException("Employer not found!"));
+
+        employer.setCompanyName(company);
+        userRepository.save(employer);
+    }
+
     private User convertToUser(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
     }

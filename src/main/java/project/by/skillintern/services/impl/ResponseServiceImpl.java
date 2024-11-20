@@ -53,6 +53,7 @@ public class ResponseServiceImpl implements ResponseService {
         responseRepository.save(response);
     }
     @Override
+    @Transactional
     public List<ResponseDTO> getResponsesForEmployer(String employerUsername) {
         User employer = userService.getUserByUsername(employerUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("Employer not found"));
@@ -90,6 +91,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
+    @Transactional
     public List<MyResponsesDTO> getResponsesForUser() {
         User user = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -106,6 +108,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
+    @Transactional
     public List<MyResponsesDTO> getResponses(ResponseStatus status) {
         User user = userService.getUserByUsername(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

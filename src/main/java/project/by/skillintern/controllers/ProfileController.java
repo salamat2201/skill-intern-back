@@ -30,7 +30,7 @@ public class ProfileController {
     @GetMapping("/get")
     @Operation(summary = "Get user profile. Authenticated Users(Токен керек)")
     @ApiResponse(responseCode = "200")
-    private ResponseEntity<ProfileDTO> getProfile() {
+    public ResponseEntity<ProfileDTO> getProfile() {
         User currentUser = profileService.getProfile(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         ProfileDTO profile = new ProfileDTO();
@@ -40,7 +40,7 @@ public class ProfileController {
 
     @PutMapping("/edit")
     @Operation(summary = "Edit user profile. Authenticated Users(Токен керек)")
-    private ResponseEntity<?> editProfile(@RequestBody ProfileDTO profileDTO) throws UserAlreadyExistsException {
+    public ResponseEntity<?> editProfile(@RequestBody ProfileDTO profileDTO) throws UserAlreadyExistsException {
         User currentUser = profileService.getProfile(userService.getCurrentUser().getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if(currentUser.getUsername().equals(profileDTO.getUsername())) {

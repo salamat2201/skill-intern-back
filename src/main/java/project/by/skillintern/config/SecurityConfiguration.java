@@ -48,8 +48,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/responses/create", "/responses/my", "/responses/my/accepted"
                         , "/responses/my/pending", "/responses/my/rejected").hasRole("USER")
                 .requestMatchers("/vacancy/add", "/vacancy/my-vacancies", "/vacancy/edit/*"
-                        , "/vacancy/delete/*", "/responses/forMyVacancy", "responses/status/*").hasRole("EMPLOYER")
-                .anyRequest().permitAll()
+                        , "/vacancy/delete/*", "/responses/forMyVacancy", "/responses/status/*", "/vacancy/addCompany").hasRole("EMPLOYER")
+                .anyRequest().authenticated()
         );
 
         http.exceptionHandling(exception -> exception
