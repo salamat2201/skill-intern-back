@@ -152,7 +152,13 @@ public class AuthController {
     @PostMapping("/update-password")
     @Operation(summary = "Update user password", description = "Updates the user's password after verification.")
     @ApiResponse(responseCode = "200", description = "Password updated successfully")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+    public ResponseEntity<?> updatePassword(@RequestBody @Valid UpdatePasswordDTO updatePasswordDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessages = bindingResult.getFieldErrors().stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.joining("; "));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
+        }
         Optional<User> user = userService.getUserByEmail(updatePasswordDTO.getEmail());
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
