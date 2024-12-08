@@ -62,7 +62,7 @@ public class ResponseServiceImpl implements ResponseService {
                 .stream()
                 .map(response -> {
                     User applicant = response.getUser(); // Получаем пользователя, который откликнулся
-                    return new ResponseDTO(applicant.getEmail(), applicant.getUsername());
+                    return new ResponseDTO(response.getId(), applicant.getEmail(), applicant.getUsername());
                 })
                 .collect(Collectors.toList());
     }
