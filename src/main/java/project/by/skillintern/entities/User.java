@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @Column(name = "is_verified")
     private Boolean isVerified;
 
+    @Column(name = "resume")
+    private String resume;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;

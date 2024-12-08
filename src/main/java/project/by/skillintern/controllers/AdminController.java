@@ -28,7 +28,7 @@ public class AdminController {
     }
     @PostMapping("/addNews")
     @Operation(summary = "Add news. Only ADMIN")
-    public ResponseEntity<?> addNews(NewsDTO newsDTO) {
+    public ResponseEntity<?> addNews(@RequestBody NewsDTO newsDTO) {
         try {
             newsService.addNews(newsDTO);
             return ResponseEntity.status(200).body("News added successfully!");

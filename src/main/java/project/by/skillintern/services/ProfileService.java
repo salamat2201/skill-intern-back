@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ProfileService {
     Optional<User> getProfile(String username);
     void updateProfile(User user) throws UserAlreadyExistsException;
+    void uploadResume(String fileUrl);
 }

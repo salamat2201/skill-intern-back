@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.by.skillintern.dto.responses.AuthDTO;
 import project.by.skillintern.dto.responses.ProfileDTO;
 import project.by.skillintern.entities.User;
@@ -15,6 +16,9 @@ import project.by.skillintern.exceptions.UserAlreadyExistsException;
 import project.by.skillintern.jwt.JwtService;
 import project.by.skillintern.services.ProfileService;
 import project.by.skillintern.services.UserService;
+import project.by.skillintern.services.impl.S3Service;
+
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -26,6 +30,7 @@ public class ProfileController {
     private final UserService userService;
     private final ProfileService profileService;
     private final JwtService jwtService;
+    private final S3Service s3Service;
 
     @GetMapping("/get")
     @Operation(summary = "Get user profile. Authenticated Users(Токен керек)")
@@ -54,5 +59,21 @@ public class ProfileController {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setToken(tokens.get("accessToken"));
         return ResponseEntity.ok(authDTO);
+    }
+    @PostMapping("/add-resume")
+    @Operation(summary = "Add resume. Authenticated Users(Токен керек)")
+    public ResponseEntity<String> addResume(@RequestParam MultipartFile resume) {
+        if (resume.isEmpty()) {
+            return ResponseEntity.badRequest().body("No file provided");
+        }
+        try {
+            String fileUrl = s3Service.uploadFile(resume);
+            profileService.uploadResume(fileUrl);
+
+            return ResponseEntity.ok(fileUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error uploading file: " + e.getMessage());
+        }
     }
 }
