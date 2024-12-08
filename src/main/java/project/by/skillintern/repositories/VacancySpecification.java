@@ -1,35 +1,37 @@
 package project.by.skillintern.repositories;
 import org.springframework.data.jpa.domain.Specification;
-import project.by.skillintern.dto.requests.FilterVacancyDTO;
 import project.by.skillintern.entities.Vacancy;
 
 import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class VacancySpecification {
-    public static Specification<Vacancy> filterVacancies(FilterVacancyDTO filterDTO) {
+    public static Specification<Vacancy> filterVacancies(String[] levels, String[] companies, String[] technologies, String employmentType, Boolean remoteWork) {
         return (Root<Vacancy> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             // Фильтр по уровню
-            if (filterDTO.getLevels() != null && filterDTO.getLevels().length > 0) {
-                predicates.add(root.get("level").in((Object[]) filterDTO.getLevels()));
+            if (levels != null && levels.length > 0 && Arrays.stream(levels).anyMatch(l -> l != null && !l.isEmpty())) {
+                predicates.add(root.get("level").in((Object[]) levels));
             }
 
-            // Фильтр по компаниям
-            if (filterDTO.getCompanies() != null && filterDTO.getCompanies().length > 0) {
-                predicates.add(root.get("employer").get("username").in((Object[]) filterDTO.getCompanies()));
+            if (companies != null && companies.length > 0 && Arrays.stream(companies).anyMatch(c -> c != null && !c.isEmpty())) {
+                predicates.add(root.get("employer").get("companyName").in((Object[]) companies));
             }
 
-            // Фильтр по типу занятости
-            if (filterDTO.getEmploymentType() != null) {
-                predicates.add(cb.equal(root.get("operatingMode"), filterDTO.getEmploymentType()));
+            if (technologies != null && technologies.length > 0 && Arrays.stream(technologies).anyMatch(t -> t != null && !t.isEmpty())) {
+                predicates.add(root.get("profession").in((Object[]) technologies));
+            }
+
+            if (employmentType != null && !employmentType.isEmpty()) {
+                predicates.add(cb.equal(root.get("operatingMode"), employmentType));
             }
 
             // Фильтр по удалённой работе
-            if (filterDTO.getRemoteWork() != null) {
-                predicates.add(cb.equal(root.get("remoteWork"), filterDTO.getRemoteWork()));
+            if (remoteWork != null) {
+                predicates.add(cb.equal(root.get("remoteWork"), remoteWork));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

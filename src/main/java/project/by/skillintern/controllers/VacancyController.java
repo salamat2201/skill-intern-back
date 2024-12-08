@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import project.by.skillintern.dto.requests.FilterVacancyDTO;
 import project.by.skillintern.dto.requests.VacancyDTO;
 import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.User;
@@ -78,8 +77,14 @@ public class VacancyController {
     }
     @GetMapping("/by-filter")
     @Operation(summary = "Get vacancies by filter. All Users(Токен керек емес)")
-    public ResponseEntity<List<VacancyResponseDTO>> vacanciesByFilter(@RequestBody FilterVacancyDTO filterVacancyDTO) {
-        return ResponseEntity.ok(vacancyService.getVacanciesByFilter(filterVacancyDTO));
+    public ResponseEntity<List<VacancyResponseDTO>> vacanciesByFilter(
+            @RequestParam String[] levels,
+            @RequestParam String[] companies,
+            @RequestParam String[] technologies,
+            @RequestParam String employmentType,
+            @RequestParam Boolean remoteWork
+    ) {
+        return ResponseEntity.ok(vacancyService.getVacanciesByFilter(levels, companies, technologies, employmentType, remoteWork));
     }
     @GetMapping("/my-vacancies")
     @Operation(summary = "Get my vacancies.")

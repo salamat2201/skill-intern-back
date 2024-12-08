@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.by.skillintern.dto.requests.FilterVacancyDTO;
 import project.by.skillintern.dto.requests.VacancyDTO;
 import project.by.skillintern.dto.responses.VacancyResponseDTO;
 import project.by.skillintern.entities.User;
@@ -51,10 +50,17 @@ public class VacancyServiceImpl implements VacancyService {
                 .filter(job -> job.getEmployer().equals(employer))
                 .toList().stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
     }
-    @Transactional
+//    @Transactional
+//    @Override
+//    public List<VacancyResponseDTO> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO) {
+//        Specification<Vacancy> specification = VacancySpecification.filterVacancies(filterVacancyDTO);
+//        return vacancyRepository.findAll(specification).stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
+//    }
+
     @Override
-    public List<VacancyResponseDTO> getVacanciesByFilter(FilterVacancyDTO filterVacancyDTO) {
-        Specification<Vacancy> specification = VacancySpecification.filterVacancies(filterVacancyDTO);
+    @Transactional
+    public List<VacancyResponseDTO> getVacanciesByFilter(String[] levels, String[] companies, String[] technologies, String employmentType, Boolean remoteWork) {
+        Specification<Vacancy> specification = VacancySpecification.filterVacancies(levels, companies, technologies, employmentType, remoteWork);
         return vacancyRepository.findAll(specification).stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
     }
 
