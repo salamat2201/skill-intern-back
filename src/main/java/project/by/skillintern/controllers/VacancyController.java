@@ -35,6 +35,12 @@ public class VacancyController {
         return ResponseEntity.ok("Company added successfully!");
     }
 
+    @GetMapping("/companies")
+    @Operation(summary = "Get all company names. All users")
+    public ResponseEntity<List<String>> getAllCompanyNames() {
+        return ResponseEntity.ok(vacancyService.getAllCompanyNames());
+    }
+
     @PostMapping("/add")
     @Operation(summary = "Add a new vacancy. Only Employers.")
     @ApiResponse(responseCode = "202", description = "Vacancy created successfully!")

@@ -39,7 +39,8 @@ public class JwtFilter extends OncePerRequestFilter {
             "/api/vacancy/by-filter",
             "/api/vacancy/detail/*",
             "/api/internship/all",
-            "/api/news/all"
+            "/api/news/all",
+            "/api/vacancy/companies"
     );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

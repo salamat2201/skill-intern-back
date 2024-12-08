@@ -64,6 +64,11 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findAll(specification).stream().map(this::convertToVacancyResponseDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllCompanyNames() {
+        return vacancyRepository.findAllCompanyNamesOfEmployers();
+    }
+
     @Transactional
     @Override
     public List<VacancyResponseDTO> getAllInternships() {

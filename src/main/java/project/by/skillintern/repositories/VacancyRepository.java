@@ -11,4 +11,10 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
     @Query("SELECT v FROM Vacancy v WHERE v.level = 'Intern'")
     List<Vacancy> findAllWhereLevelIsIntern();
 
+    @Query(value = "SELECT DISTINCT u.company_name " +
+            "FROM vacancies v " +
+            "JOIN users u ON v.employer_id = u.id " +
+            "WHERE u.role = 'ROLE_EMPLOYER'", nativeQuery = true)
+    List<String> findAllCompanyNamesOfEmployers();
+
 }

@@ -34,7 +34,7 @@ public class ResponseController {
         return ResponseEntity.ok(responses);
     }
     @PatchMapping("/status/{responseId}")
-    @Operation(summary = "Get all vacancies. All Users(Токен керек емес)")
+    @Operation(summary = "Обновить статус респонса")
     public ResponseEntity<String> updateResponseStatus(
             @PathVariable Long responseId,
             @RequestParam ResponseStatus status) {

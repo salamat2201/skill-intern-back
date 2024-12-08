@@ -15,4 +15,6 @@ public interface VacancyService {
     void deleteVacancy(Long id);
 
     List<VacancyResponseDTO> getVacanciesByFilter(String[] levels, String[] companies, String[] technologies, String employmentType, Boolean remoteWork);
+
+    List<String> getAllCompanyNames();
 }

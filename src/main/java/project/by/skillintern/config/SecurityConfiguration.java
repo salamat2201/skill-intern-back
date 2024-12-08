@@ -35,7 +35,8 @@ public class SecurityConfiguration {
             "/vacancy/detail/*",
             "/profile/**",
             "/internship/all",
-            "/news/all"
+            "/news/all",
+            "/vacancy/companies"
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
