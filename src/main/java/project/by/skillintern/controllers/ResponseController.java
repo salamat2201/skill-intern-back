@@ -28,9 +28,8 @@ public class ResponseController {
     }
     @GetMapping("/forMyVacancy")
     @Operation(summary = "Get all responses for Employer Vacancy. Only Employers")
-    public ResponseEntity<List<ResponseDTO>> getResponsesForEmployer() {
-        String employerUsername = userService.getCurrentUser().getUsername();
-        List<ResponseDTO> responses = responseService.getResponsesForEmployer(employerUsername);
+    public ResponseEntity<List<ResponseDTO>> getResponsesForEmployer(@RequestParam Long vacancyId) {
+        List<ResponseDTO> responses = responseService.getResponsesForEmployer(vacancyId);
         return ResponseEntity.ok(responses);
     }
     @PatchMapping("/status/{responseId}")

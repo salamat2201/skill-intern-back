@@ -54,11 +54,10 @@ public class ResponseServiceImpl implements ResponseService {
     }
     @Override
     @Transactional
-    public List<ResponseDTO> getResponsesForEmployer(String employerUsername) {
-        User employer = userService.getUserByUsername(employerUsername)
-                .orElseThrow(() -> new UsernameNotFoundException("Employer not found"));
-
-        return responseRepository.findByVacancy_Employer(employer)
+    public List<ResponseDTO> getResponsesForEmployer(Long vacancyId) {
+        Vacancy vacancy = vacancyRepository.findById(vacancyId)
+                .orElseThrow(() -> new VacancyNotFoundException("Vacancy not found!"));
+        return responseRepository.findByVacancy(vacancy)
                 .stream()
                 .map(response -> {
                     User applicant = response.getUser(); // Получаем пользователя, который откликнулся

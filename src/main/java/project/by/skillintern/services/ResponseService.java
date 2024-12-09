@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ResponseService {
     void createResponse(Long vacancyId);
-    List<ResponseDTO> getResponsesForEmployer(String employerUsername);
+    List<ResponseDTO> getResponsesForEmployer(Long vacancyId);
     void updateResponseStatus(Long responseId, ResponseStatus status);
     List<MyResponsesDTO> getResponsesForUser();
     List<MyResponsesDTO> getResponses(ResponseStatus status);
